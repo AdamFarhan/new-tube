@@ -103,10 +103,6 @@ export const FormSectionSuspense = ({ videoId }: PageProps) => {
     onSuccess: () => {
       utils.studio.getOne.invalidate({ id: videoId });
       utils.studio.getMany.invalidate();
-      toast.success("Thumbnail restored");
-    },
-    onError: () => {
-      toast.error("Something went wrong");
     },
   });
 
@@ -250,7 +246,14 @@ export const FormSectionSuspense = ({ videoId }: PageProps) => {
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => {
-                                restoreThumbnail.mutate({ id: videoId });
+                                toast.promise(
+                                  restoreThumbnail.mutateAsync({ id: videoId }),
+                                  {
+                                    loading: "Restoring...",
+                                    success: "Thumbnail restored",
+                                    error: "Something went wrong",
+                                  }
+                                );
                               }}
                             >
                               <RotateCcwIcon className="size-4 mr-1" />
